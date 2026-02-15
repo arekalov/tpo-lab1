@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.21"
     jacoco
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 group = "com.arekalov.tpolab1"
@@ -14,6 +15,9 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    
+    // Detekt
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
 
 tasks.test {
@@ -40,7 +44,36 @@ tasks.jacocoTestCoverageVerification {
     }
 }
 
-tasks.register("reports") {
+// Настройка Detekt
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom("$projectDir/detekt.yml")
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html {
+            required.set(true)
+            outputLocation.set(layout.buildDirectory.file("reports/detekt/detekt.html"))
+        }
+        txt {
+            required.set(true)
+            outputLocation.set(layout.buildDirectory.file("reports/detekt/detekt.txt"))
+        }
+        xml.required.set(false)
+        sarif.required.set(false)
+        md.required.set(false)
+    }
+    
+    jvmTarget = "17"
+}
+
+tasks.named("check") {
+    setDependsOn(dependsOn.filterNot { it.toString().contains("detekt") })
+}
+
+tasks.register("openReports") {
     group = "reporting"
     description = "Генерирует JUnit и JaCoCo отчёты и открывает их в браузере"
     
