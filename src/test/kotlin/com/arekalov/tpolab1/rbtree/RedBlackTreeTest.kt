@@ -367,7 +367,7 @@ class RedBlackTreeTest {
     }
 
     @Test
-    @DisplayName("Покрытие FIRST: DELETE-LEFT-CASE3 - Брат черный, левый ребенок красный, правый черный")
+    @DisplayName("Брат черный, левый ребенок красный, правый черный")
     fun testDeleteLeftCase3() {
         val insertions = listOf(41, 19, 8, 39, 21, 97, 109, 82, 58, 72)
         val deletions = listOf(39, 8, 19, 41, 82)
@@ -380,7 +380,7 @@ class RedBlackTreeTest {
     }
 
     @Test
-    @DisplayName("Покрытие SECOND: DELETE-RIGHT-CASE1 - Брат красный (зеркальный)")
+    @DisplayName("Брат красный (зеркальный)")
     fun testDeleteRightCase1() {
         val insertions = listOf(53, 68, 77, 102, 27, 31, 119, 101, 94, 76, 83, 54, 95, 3, 1, 52, 26, 112, 104, 92)
         val deletions = listOf(68, 31, 101, 104, 95, 53, 102, 94, 119, 26)
@@ -393,7 +393,7 @@ class RedBlackTreeTest {
     }
 
     @Test
-    @DisplayName("Покрытие THIRD: DELETE-RIGHT-CASE3 - Брат черный, правый ребенок красный, левый черный (зеркальный)")
+    @DisplayName("Брат черный, правый ребенок красный, левый черный (зеркальный)")
     fun testDeleteRightCase3() {
         val insertions = listOf(57, 109, 103, 116, 107, 8, 99, 87, 94, 118, 28, 33, 21, 55)
         val deletions = listOf(99, 107, 94, 21, 8, 118, 28, 87, 55, 109, 57)
