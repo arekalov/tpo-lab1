@@ -1,11 +1,16 @@
 plugins {
     kotlin("jvm") version "2.0.21"
+    application
     jacoco
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 group = "com.arekalov.tpolab1"
 version = "1.0-SNAPSHOT"
+
+application {
+    mainClass.set("com.arekalov.tpolab1.universe.MainKt")
+}
 
 repositories {
     mavenCentral()
