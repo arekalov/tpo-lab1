@@ -73,7 +73,7 @@ tasks.named("check") {
     setDependsOn(dependsOn.filterNot { it.toString().contains("detekt") })
 }
 
-tasks.register("openReports") {
+tasks.register("reports") {
     group = "reporting"
     description = "Генерирует JUnit и JaCoCo отчёты и открывает их в браузере"
     
