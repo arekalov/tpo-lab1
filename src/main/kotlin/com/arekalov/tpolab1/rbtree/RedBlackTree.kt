@@ -1,5 +1,3 @@
-@file:Suppress("ForbiddenComment", "TooManyFunctions")
-
 package com.arekalov.tpolab1.rbtree
 
 /**
@@ -31,6 +29,7 @@ data class Node(
  * 4. Красный узел не может иметь красных детей
  * 5. Все пути от узла до листьев содержат одинаковое количество черных узлов
  */
+@Suppress("CyclomaticComplexMethod", "NestedBlockDepth", "LongMethod", "TooManyFunctions")
 class RedBlackTree {
     private var root: Node? = null
 
@@ -75,7 +74,6 @@ class RedBlackTree {
     /**
      * Балансировка после вставки узла
      */
-    @Suppress("CyclomaticComplexMethod", "NestedBlockDepth")
     private fun balanceAfterInsert(node: Node) {
         var current = node
 
@@ -299,7 +297,6 @@ class RedBlackTree {
     /**
      * Балансировка после удаления узла
      */
-    @Suppress("CyclomaticComplexMethod", "NestedBlockDepth", "LongMethod")
     private fun balanceAfterDelete(node: Node) {
         var current = node
 

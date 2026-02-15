@@ -12,7 +12,7 @@ config:
   warningsAsErrors: false
 
 comments:
-  active: true
+  active: false
   AbsentOrWrongFileLicense:
     active: false
   CommentOverPrivateFunction:
@@ -273,8 +273,8 @@ style:
   ExpressionBodySyntax:
     active: false
   ForbiddenComment:
-    active: true
-    autoCorrect: true
+    active: false
+    autoCorrect: false
     comments:
       - value: '.*'
     allowedPatterns: ''

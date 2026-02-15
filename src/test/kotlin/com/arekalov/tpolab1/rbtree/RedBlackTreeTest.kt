@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("Тесты RedBlackTree")
-@Suppress("ForbiddenComment")
 class RedBlackTreeTest {
 
     private lateinit var tree: RedBlackTree

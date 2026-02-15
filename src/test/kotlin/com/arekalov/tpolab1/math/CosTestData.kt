@@ -7,7 +7,6 @@ import kotlin.math.sqrt
  * Константы и тестовые данные для проверки функции cos(x).
  * Все значения получены из независимых источников (НЕ java.lang.Math).
  */
-@Suppress("ForbiddenComment")
 object CosTestData {
     const val PI = 3.14159265358979323846264338327950288419716939937510
     const val EPSILON = 1e-10

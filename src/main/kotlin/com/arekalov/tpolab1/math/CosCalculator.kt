@@ -7,7 +7,6 @@ import kotlin.math.abs
  *
  * Использует формулу: cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! + x⁸/8! - ...
  */
-@Suppress("ForbiddenComment")
 object CosCalculator {
 
     /**
