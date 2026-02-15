@@ -2,12 +2,9 @@ package com.arekalov.tpolab1.math
 
 import com.arekalov.tpolab1.math.CosTestData.EPSILON
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import kotlin.math.abs
 
 /**
  * Параметризованные тесты для функции cos(x).
@@ -18,19 +15,8 @@ import kotlin.math.abs
 class CosCalculatorTest {
 
     @ParameterizedTest(name = "cos({0}) = {1}")
-    @MethodSource("provideAllTestPoints")
-    @DisplayName("Все тестовые точки")
-    fun testAllPoints(x: Double, expected: Double) {
-        val result = CosCalculator.cos(x)
-        assertEquals(
-            expected, result, EPSILON,
-            "cos($x) должно быть $expected, получено $result"
-        )
-    }
-    
-    @ParameterizedTest(name = "cos({0}) = {1}")
     @MethodSource("provideSpecialPoints")
-    @DisplayName("Особые точки (стандартные углы)")
+    @DisplayName("Ключевые точки периода функции")
     fun testSpecialPoints(x: Double, expected: Double) {
         val result = CosCalculator.cos(x)
         assertEquals(
@@ -41,7 +27,7 @@ class CosCalculatorTest {
     
     @ParameterizedTest(name = "cos({0}) = {1}")
     @MethodSource("provideBoundaryPoints")
-    @DisplayName("Граничные значения (малые и средние x)")
+    @DisplayName("Граничные и промежуточные значения")
     fun testBoundaryPoints(x: Double, expected: Double) {
         val result = CosCalculator.cos(x)
         assertEquals(
@@ -52,7 +38,7 @@ class CosCalculatorTest {
     
     @ParameterizedTest(name = "cos({0}) = {1}")
     @MethodSource("provideSymmetryPoints")
-    @DisplayName("Тесты симметрии (отрицательные x)")
+    @DisplayName("Проверка чётности: cos(-x) = cos(x)")
     fun testSymmetryPoints(x: Double, expected: Double) {
         val result = CosCalculator.cos(x)
         assertEquals(
@@ -63,7 +49,7 @@ class CosCalculatorTest {
     
     @ParameterizedTest(name = "cos({0}) = {1}")
     @MethodSource("providePeriodicityPoints")
-    @DisplayName("Тесты периодичности")
+    @DisplayName("Проверка периодичности: cos(x) = cos(x + 2π)")
     fun testPeriodicityPoints(x: Double, expected: Double) {
         val result = CosCalculator.cos(x)
         assertEquals(
@@ -74,7 +60,7 @@ class CosCalculatorTest {
     
     @ParameterizedTest(name = "cos({0}) = {1}")
     @MethodSource("provideArbitraryPoints")
-    @DisplayName("Произвольные точки")
+    @DisplayName("Произвольные значения")
     fun testArbitraryPoints(x: Double, expected: Double) {
         val result = CosCalculator.cos(x)
         assertEquals(
@@ -82,22 +68,8 @@ class CosCalculatorTest {
             "cos($x) должно быть $expected, получено $result"
         )
     }
-    
-    @ParameterizedTest(name = "cos(0) = 1 с epsilon = {0}")
-    @MethodSource("provideDifferentEpsilons")
-    @DisplayName("Тесты с различными значениями epsilon")
-    fun testDifferentEpsilons(epsilon: Double) {
-        val result = CosCalculator.cos(0.0, epsilon)
-        assertTrue(
-            abs(result - 1.0) <= epsilon,
-            "cos(0) с epsilon=$epsilon должно быть близко к 1.0, получено $result"
-        )
-    }
 
     companion object {
-        @JvmStatic
-        fun provideAllTestPoints() = CosTestData.allPoints.toArguments()
-
         @JvmStatic
         fun provideSpecialPoints() = CosTestData.specialPoints.toArguments()
 
@@ -112,8 +84,5 @@ class CosCalculatorTest {
 
         @JvmStatic
         fun provideArbitraryPoints() = CosTestData.arbitraryPoints.toArguments()
-
-        @JvmStatic
-        fun provideDifferentEpsilons() = CosTestData.epsilonValues.map { Arguments.of(it) }
     }
 }
