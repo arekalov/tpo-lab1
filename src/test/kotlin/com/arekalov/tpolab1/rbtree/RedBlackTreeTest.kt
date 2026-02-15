@@ -1,5 +1,3 @@
-@file:Suppress("ForbiddenComment")
-
 package com.arekalov.tpolab1.rbtree
 
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -10,6 +8,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("Тесты RedBlackTree")
+@Suppress("LongMethod", "NoConsecutiveBlankLines", "NoUnusedImports", "ForbiddenComment")
 class RedBlackTreeTest {
 
     private lateinit var tree: RedBlackTree
@@ -19,13 +18,20 @@ class RedBlackTreeTest {
         tree = RedBlackTree()
     }
 
-    // === Базовые тесты ===
-
     @Test
     @DisplayName("Новое дерево должно быть пустым")
     fun testNewTreeIsEmpty() {
         assertTrue(tree.isEmpty())
         assertEquals(0, tree.size())
+    }
+
+    @Test
+    @DisplayName("Дерево с одним элементом не пустое")
+    fun testTreeWithOneElementIsNotEmpty() {
+        tree.insert(1)
+
+        assertTrue(!tree.isEmpty())
+        assertEquals(1, tree.size())
     }
 
     @Test
@@ -69,8 +75,6 @@ class RedBlackTreeTest {
         assertEquals(1, tree.size())
         assertTrue(tree.search(10))
     }
-
-    // === Тесты удаления ===
 
     @Test
     @DisplayName("Удаление единственного элемента")
@@ -156,8 +160,6 @@ class RedBlackTreeTest {
         assertTrue(tree.isEmpty())
     }
 
-    // === Тесты балансировки ===
-
     @Test
     @DisplayName("Сложная последовательность операций")
     fun testComplexSequence() {
@@ -193,7 +195,6 @@ class RedBlackTreeTest {
         val values = (1..100).toList()
         values.forEach { tree.insert(it) }
 
-        // Удаляем каждый третий элемент
         values.filter { it % 3 == 0 }.forEach { tree.delete(it) }
 
         val remaining = values.filter { it % 3 != 0 }
@@ -212,7 +213,6 @@ class RedBlackTreeTest {
         )
         values.forEach { tree.insert(it) }
 
-        // Удаляем в порядке, покрывающем различные случаи
         listOf(3, 96, 6, 93, 9, 90, 12, 87).forEach { tree.delete(it) }
 
         val result = tree.toList()
@@ -256,6 +256,16 @@ class RedBlackTreeTest {
     }
 
     @Test
+    @DisplayName("Удаление несуществующего элемента")
+    fun testDelete() {
+        tree.insert(1)
+
+        tree.delete(10)
+
+        assertTrue(tree.size() == 1)
+    }
+
+    @Test
     @DisplayName("Каскадные удаления")
     fun testCascadingDeletions() {
         listOf(50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 85).forEach { tree.insert(it) }
@@ -275,7 +285,6 @@ class RedBlackTreeTest {
         val values = (1..63).toList()
         values.forEach { tree.insert(it) }
 
-        // Удаляем слева
         listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach { tree.delete(it) }
 
         assertEquals(55, tree.size())
@@ -289,7 +298,6 @@ class RedBlackTreeTest {
         val values = (1..63).toList()
         values.forEach { tree.insert(it) }
 
-        // Удаляем справа
         listOf(63, 62, 61, 60, 59, 58, 57, 56).forEach { tree.delete(it) }
 
         assertEquals(55, tree.size())
@@ -331,14 +339,11 @@ class RedBlackTreeTest {
         val values = (10..100 step 5).toList()
         values.forEach { tree.insert(it) }
 
-        // Удаляем с разных концов
         listOf(10, 100, 15, 95, 20, 90).forEach { tree.delete(it) }
 
         val result = tree.toList()
         assertEquals(result.sorted(), result)
     }
-
-    // === Тесты edge cases ===
 
     @Test
     @DisplayName("Отрицательные числа")
@@ -359,5 +364,54 @@ class RedBlackTreeTest {
         assertEquals(3, tree.size())
         assertTrue(tree.search(Int.MAX_VALUE))
         assertTrue(tree.search(Int.MIN_VALUE))
+    }
+
+    @Test
+    @DisplayName("Покрытие FIRST: DELETE-LEFT-CASE3 - Брат черный, левый ребенок красный, правый черный")
+    fun testDeleteLeftCase3() {
+        val insertions = listOf(41, 19, 8, 39, 21, 97, 109, 82, 58, 72)
+        val deletions = listOf(39, 8, 19, 41, 82)
+
+        insertions.forEach { tree.insert(it) }
+        deletions.forEach { tree.delete(it) }
+
+        assertEquals(listOf(21, 58, 72, 97, 109), tree.toList())
+        assertEquals(5, tree.size())
+    }
+
+    @Test
+    @DisplayName("Покрытие SECOND: DELETE-RIGHT-CASE1 - Брат красный (зеркальный)")
+    fun testDeleteRightCase1() {
+        val insertions = listOf(53, 68, 77, 102, 27, 31, 119, 101, 94, 76, 83, 54, 95, 3, 1, 52, 26, 112, 104, 92)
+        val deletions = listOf(68, 31, 101, 104, 95, 53, 102, 94, 119, 26)
+
+        insertions.forEach { tree.insert(it) }
+        deletions.forEach { tree.delete(it) }
+
+        assertEquals(listOf(1, 3, 27, 52, 54, 76, 77, 83, 92, 112), tree.toList())
+        assertEquals(10, tree.size())
+    }
+
+    @Test
+    @DisplayName("Покрытие THIRD: DELETE-RIGHT-CASE3 - Брат черный, правый ребенок красный, левый черный (зеркальный)")
+    fun testDeleteRightCase3() {
+        val insertions = listOf(57, 109, 103, 116, 107, 8, 99, 87, 94, 118, 28, 33, 21, 55)
+        val deletions = listOf(99, 107, 94, 21, 8, 118, 28, 87, 55, 109, 57)
+
+        insertions.forEach { tree.insert(it) }
+        deletions.forEach { tree.delete(it) }
+
+        assertEquals(listOf(33, 103, 116), tree.toList())
+        assertEquals(3, tree.size())
+    }
+
+    // Синтетические тесты
+    @Test
+    @DisplayName("Проверка enum Color")
+    fun testColorEnum() {
+        val colors = Color.entries
+        assertEquals(2, colors.size)
+        assertTrue(colors.contains(Color.RED))
+        assertTrue(colors.contains(Color.BLACK))
     }
 }

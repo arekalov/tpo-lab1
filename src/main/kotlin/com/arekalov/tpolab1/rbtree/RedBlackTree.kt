@@ -299,7 +299,7 @@ class RedBlackTree {
     /**
      * Балансировка после удаления узла
      */
-    @Suppress("CyclomaticComplexMethod", "NestedBlockDepth")
+    @Suppress("CyclomaticComplexMethod", "NestedBlockDepth", "LongMethod")
     private fun balanceAfterDelete(node: Node) {
         var current = node
 
@@ -345,12 +345,12 @@ class RedBlackTree {
                 var sibling = currentParent.left
 
                 // Случай 1: Брат красный (зеркальный)
-//                if (sibling?.color == Color.RED) {
-//                    sibling.color = Color.BLACK
-//                    currentParent.color = Color.RED
-//                    rotateRight(currentParent)
-//                    sibling = currentParent.left
-//                }
+                if (sibling?.color == Color.RED) {
+                    sibling.color = Color.BLACK
+                    currentParent.color = Color.RED
+                    rotateRight(currentParent)
+                    sibling = currentParent.left
+                }
 
                 // Случай 2: Брат черный и оба его ребенка черные (зеркальный)
                 if (sibling?.right?.color == Color.BLACK && sibling.left?.color == Color.BLACK) {
