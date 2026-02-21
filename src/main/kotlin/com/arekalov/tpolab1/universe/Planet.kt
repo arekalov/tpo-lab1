@@ -45,32 +45,39 @@ data class Planet(
             return "Недостаточно участников для турнира"
         }
 
-        // Подсчет побед для каждого участника
         val wins = mutableMapOf<Habitant, Int>()
         inhabitants.forEach { wins[it] = 0 }
 
         var events = 0
-        for (i in inhabitants.indices) {
-            for (j in inhabitants.indices) {
-                if (i != j) {
-                    inhabitants[i].playBrockianUltraCricket(inhabitants[j])
-                    wins[inhabitants[i]] = (wins[inhabitants[i]] ?: 0) + 1
-                    events++
-                }
-            }
+        for (attacker in inhabitants) {
+            events += processTournamentMatches(attacker = attacker, wins = wins)
         }
 
-        // Определяем победителя
-        val winner = wins.maxByOrNull { it.value }
+        return buildTournamentReport(wins = wins, events = events)
+    }
 
+    private fun processTournamentMatches(attacker: Habitant, wins: MutableMap<Habitant, Int>): Int {
+        var matchesCount = 0
+        for (defender in inhabitants) {
+            if (attacker != defender) {
+                attacker.playBrockianUltraCricket(target = defender)
+                if (attacker.knowledgeLevel >= defender.knowledgeLevel) {
+                    wins[attacker] = (wins[attacker] ?: 0) + 1
+                }
+                matchesCount++
+            }
+        }
+        return matchesCount
+    }
+
+    private fun buildTournamentReport(wins: Map<Habitant, Int>, events: Int): String {
+        val winner = wins.maxBy { it.value }
         return buildString {
             appendLine("Турнир завершен! События: $events")
-            if (winner != null) {
-                appendLine("🏆 Победитель: ${winner.key.name} с ${winner.value} победами!")
-                appendLine("\nТаблица результатов:")
-                wins.entries.sortedByDescending { it.value }.forEach { (habitant, count) ->
-                    appendLine("  ${habitant.name}: $count побед")
-                }
+            appendLine("🏆 Победитель: ${winner.key.name} с ${winner.value} победами!")
+            appendLine("\nТаблица результатов:")
+            wins.entries.sortedByDescending { it.value }.forEach { (habitant, count) ->
+                appendLine("  ${habitant.name}: $count побед")
             }
         }
     }

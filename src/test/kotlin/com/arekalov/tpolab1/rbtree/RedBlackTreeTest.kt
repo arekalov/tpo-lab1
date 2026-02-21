@@ -27,7 +27,7 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Дерево с одним элементом не пустое")
     fun testTreeWithOneElementIsNotEmpty() {
-        tree.insert(1)
+        tree.insert(value = 1)
 
         assertTrue(!tree.isEmpty())
         assertEquals(1, tree.size())
@@ -36,20 +36,20 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Вставка и поиск элементов")
     fun testInsertAndSearch() {
-        tree.insert(10)
-        tree.insert(5)
-        tree.insert(15)
+        tree.insert(value = 10)
+        tree.insert(value = 5)
+        tree.insert(value = 15)
 
-        assertTrue(tree.search(10))
-        assertTrue(tree.search(5))
-        assertTrue(tree.search(15))
-        assertFalse(tree.search(20))
+        assertTrue(tree.search(value = 10))
+        assertTrue(tree.search(value = 5))
+        assertTrue(tree.search(value = 15))
+        assertFalse(tree.search(value = 20))
     }
 
     @Test
     @DisplayName("Вставка в возрастающем порядке")
     fun testInsertAscending() {
-        (1..10).forEach { tree.insert(it) }
+        (1..10).forEach { tree.insert(value = it) }
 
         assertEquals(10, tree.size())
         assertEquals((1..10).toList(), tree.toList())
@@ -58,7 +58,7 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Вставка в убывающем порядке")
     fun testInsertDescending() {
-        (10 downTo 1).forEach { tree.insert(it) }
+        (10 downTo 1).forEach { tree.insert(value = it) }
 
         assertEquals(10, tree.size())
         assertEquals((1..10).toList(), tree.toList())
@@ -67,84 +67,84 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Вставка дубликатов не увеличивает размер")
     fun testInsertDuplicates() {
-        tree.insert(10)
-        tree.insert(10)
-        tree.insert(10)
+        tree.insert(value = 10)
+        tree.insert(value = 10)
+        tree.insert(value = 10)
 
         assertEquals(1, tree.size())
-        assertTrue(tree.search(10))
+        assertTrue(tree.search(value = 10))
     }
 
     @Test
     @DisplayName("Удаление единственного элемента")
     fun testDeleteSingleElement() {
-        tree.insert(10)
-        tree.delete(10)
+        tree.insert(value = 10)
+        tree.delete(value = 10)
 
         assertTrue(tree.isEmpty())
-        assertFalse(tree.search(10))
+        assertFalse(tree.search(value = 10))
     }
 
     @Test
     @DisplayName("Удаление листового узла")
     fun testDeleteLeafNode() {
-        tree.insert(10)
-        tree.insert(5)
-        tree.insert(15)
-        tree.insert(3)
-        tree.insert(7)
+        tree.insert(value = 10)
+        tree.insert(value = 5)
+        tree.insert(value = 15)
+        tree.insert(value = 3)
+        tree.insert(value = 7)
 
-        tree.delete(3)
+        tree.delete(value = 3)
 
         assertEquals(4, tree.size())
-        assertFalse(tree.search(3))
+        assertFalse(tree.search(value = 3))
         assertEquals(listOf(5, 7, 10, 15), tree.toList())
     }
 
     @Test
     @DisplayName("Удаление узла с одним ребенком")
     fun testDeleteNodeWithOneChild() {
-        tree.insert(10)
-        tree.insert(5)
-        tree.insert(15)
-        tree.insert(3)
+        tree.insert(value = 10)
+        tree.insert(value = 5)
+        tree.insert(value = 15)
+        tree.insert(value = 3)
 
-        tree.delete(5)
+        tree.delete(value = 5)
 
         assertEquals(3, tree.size())
-        assertFalse(tree.search(5))
-        assertTrue(tree.search(3))
+        assertFalse(tree.search(value = 5))
+        assertTrue(tree.search(value = 3))
     }
 
     @Test
     @DisplayName("Удаление узла с двумя детьми")
     fun testDeleteNodeWithTwoChildren() {
-        tree.insert(10)
-        tree.insert(5)
-        tree.insert(15)
-        tree.insert(3)
-        tree.insert(7)
-        tree.insert(13)
-        tree.insert(17)
+        tree.insert(value = 10)
+        tree.insert(value = 5)
+        tree.insert(value = 15)
+        tree.insert(value = 3)
+        tree.insert(value = 7)
+        tree.insert(value = 13)
+        tree.insert(value = 17)
 
-        tree.delete(5)
+        tree.delete(value = 5)
 
         assertEquals(6, tree.size())
-        assertFalse(tree.search(5))
+        assertFalse(tree.search(value = 5))
         assertEquals(listOf(3, 7, 10, 13, 15, 17), tree.toList())
     }
 
     @Test
     @DisplayName("Удаление корня")
     fun testDeleteRoot() {
-        tree.insert(10)
-        tree.insert(5)
-        tree.insert(15)
+        tree.insert(value = 10)
+        tree.insert(value = 5)
+        tree.insert(value = 15)
 
-        tree.delete(10)
+        tree.delete(value = 10)
 
         assertEquals(2, tree.size())
-        assertFalse(tree.search(10))
+        assertFalse(tree.search(value = 10))
         assertEquals(listOf(5, 15), tree.toList())
     }
 
@@ -152,9 +152,9 @@ class RedBlackTreeTest {
     @DisplayName("Удаление всех элементов по одному")
     fun testDeleteAllElements() {
         val values = (1..10).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        values.forEach { tree.delete(it) }
+        values.forEach { tree.delete(value = it) }
 
         assertTrue(tree.isEmpty())
     }
@@ -162,27 +162,27 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Сложная последовательность операций")
     fun testComplexSequence() {
-        tree.insert(50)
-        tree.insert(25)
-        tree.insert(75)
-        tree.insert(10)
-        tree.insert(30)
-        tree.insert(60)
-        tree.insert(80)
+        tree.insert(value = 50)
+        tree.insert(value = 25)
+        tree.insert(value = 75)
+        tree.insert(value = 10)
+        tree.insert(value = 30)
+        tree.insert(value = 60)
+        tree.insert(value = 80)
 
         assertEquals(7, tree.size())
 
-        tree.delete(25)
+        tree.delete(value = 25)
         assertEquals(6, tree.size())
-        assertFalse(tree.search(25))
+        assertFalse(tree.search(value = 25))
 
-        tree.insert(25)
+        tree.insert(value = 25)
         assertEquals(7, tree.size())
-        assertTrue(tree.search(25))
+        assertTrue(tree.search(value = 25))
 
-        tree.delete(50)
+        tree.delete(value = 50)
         assertEquals(6, tree.size())
-        assertFalse(tree.search(50))
+        assertFalse(tree.search(value = 50))
 
         val expected = listOf(10, 25, 30, 60, 75, 80)
         assertEquals(expected, tree.toList())
@@ -192,9 +192,9 @@ class RedBlackTreeTest {
     @DisplayName("Стресс тест: массовые операции")
     fun testStressMassiveOperations() {
         val values = (1..100).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        values.filter { it % 3 == 0 }.forEach { tree.delete(it) }
+        values.filter { it % 3 == 0 }.forEach { tree.delete(value = it) }
 
         val remaining = values.filter { it % 3 != 0 }
         assertEquals(remaining.size, tree.size())
@@ -210,9 +210,9 @@ class RedBlackTreeTest {
             3, 9, 15, 21, 28, 34, 40, 46,
             53, 59, 65, 71, 78, 84, 90, 96,
         )
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        listOf(3, 96, 6, 93, 9, 90, 12, 87).forEach { tree.delete(it) }
+        listOf(3, 96, 6, 93, 9, 90, 12, 87).forEach { tree.delete(value = it) }
 
         val result = tree.toList()
         assertEquals(result.sorted(), result)
@@ -226,7 +226,7 @@ class RedBlackTreeTest {
             5, 15, 25, 35, 45, 55, 65, 75,
             3, 7, 12, 17, 22, 27, 32, 37,
         )
-        sequence.forEach { tree.insert(it) }
+        sequence.forEach { tree.insert(value = it) }
 
         assertEquals(23, tree.size())
         assertEquals(sequence.sorted(), tree.toList())
@@ -236,9 +236,9 @@ class RedBlackTreeTest {
     @DisplayName("Удаление минимального элемента много раз")
     fun testDeleteMinimumRepeatedly() {
         val values = (1..10).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        values.forEach { tree.delete(it) }
+        values.forEach { tree.delete(value = it) }
 
         assertTrue(tree.isEmpty())
     }
@@ -247,9 +247,9 @@ class RedBlackTreeTest {
     @DisplayName("Удаление максимального элемента много раз")
     fun testDeleteMaximumRepeatedly() {
         val values = (1..10).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        values.reversed().forEach { tree.delete(it) }
+        values.reversed().forEach { tree.delete(value = it) }
 
         assertTrue(tree.isEmpty())
     }
@@ -257,9 +257,9 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Удаление несуществующего элемента")
     fun testDelete() {
-        tree.insert(1)
+        tree.insert(value = 1)
 
-        tree.delete(10)
+        tree.delete(value = 10)
 
         assertTrue(tree.size() == 1)
     }
@@ -267,11 +267,11 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Каскадные удаления")
     fun testCascadingDeletions() {
-        listOf(50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 85).forEach { tree.insert(it) }
+        listOf(50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 85).forEach { tree.insert(value = it) }
 
-        tree.delete(10)
-        tree.delete(25)
-        tree.delete(20)
+        tree.delete(value = 10)
+        tree.delete(value = 25)
+        tree.delete(value = 20)
 
         assertEquals(12, tree.size())
         val result = tree.toList()
@@ -282,9 +282,9 @@ class RedBlackTreeTest {
     @DisplayName("Большое дерево с удалениями слева")
     fun testLargeTreeWithLeftDeletions() {
         val values = (1..63).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach { tree.delete(it) }
+        listOf(1, 2, 3, 4, 5, 6, 7, 8).forEach { tree.delete(value = it) }
 
         assertEquals(55, tree.size())
         val result = tree.toList()
@@ -295,9 +295,9 @@ class RedBlackTreeTest {
     @DisplayName("Большое дерево с удалениями справа")
     fun testLargeTreeWithRightDeletions() {
         val values = (1..63).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        listOf(63, 62, 61, 60, 59, 58, 57, 56).forEach { tree.delete(it) }
+        listOf(63, 62, 61, 60, 59, 58, 57, 56).forEach { tree.delete(value = it) }
 
         assertEquals(55, tree.size())
         val result = tree.toList()
@@ -307,11 +307,11 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Балансировка при удалении с левой стороны")
     fun testBalancingWithLeftSideDeletions() {
-        listOf(20, 10, 30, 5, 15, 25, 35, 3, 7, 12, 17, 22, 27, 33, 40).forEach { tree.insert(it) }
+        listOf(20, 10, 30, 5, 15, 25, 35, 3, 7, 12, 17, 22, 27, 33, 40).forEach { tree.insert(value = it) }
 
-        tree.delete(3)
-        tree.delete(7)
-        tree.delete(5)
+        tree.delete(value = 3)
+        tree.delete(value = 7)
+        tree.delete(value = 5)
 
         assertEquals(12, tree.size())
         val result = tree.toList()
@@ -321,11 +321,11 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Балансировка при удалении с правой стороны")
     fun testBalancingWithRightSideDeletions() {
-        listOf(50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 90).forEach { tree.insert(it) }
+        listOf(50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 90).forEach { tree.insert(value = it) }
 
-        tree.delete(90)
-        tree.delete(75)
-        tree.delete(80)
+        tree.delete(value = 90)
+        tree.delete(value = 75)
+        tree.delete(value = 80)
 
         assertEquals(12, tree.size())
         val result = tree.toList()
@@ -336,9 +336,9 @@ class RedBlackTreeTest {
     @DisplayName("Массовые удаления для покрытия различных случаев")
     fun testMassiveDeletionsForCoverage() {
         val values = (10..100 step 5).toList()
-        values.forEach { tree.insert(it) }
+        values.forEach { tree.insert(value = it) }
 
-        listOf(10, 100, 15, 95, 20, 90).forEach { tree.delete(it) }
+        listOf(10, 100, 15, 95, 20, 90).forEach { tree.delete(value = it) }
 
         val result = tree.toList()
         assertEquals(result.sorted(), result)
@@ -347,7 +347,7 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Отрицательные числа")
     fun testNegativeNumbers() {
-        listOf(-10, -5, 0, 5, 10).forEach { tree.insert(it) }
+        listOf(-10, -5, 0, 5, 10).forEach { tree.insert(value = it) }
 
         assertEquals(5, tree.size())
         assertEquals(listOf(-10, -5, 0, 5, 10), tree.toList())
@@ -356,13 +356,13 @@ class RedBlackTreeTest {
     @Test
     @DisplayName("Минимальное и максимальное значение Int")
     fun testIntBoundaries() {
-        tree.insert(Int.MAX_VALUE)
-        tree.insert(Int.MIN_VALUE)
-        tree.insert(0)
+        tree.insert(value = Int.MAX_VALUE)
+        tree.insert(value = Int.MIN_VALUE)
+        tree.insert(value = 0)
 
         assertEquals(3, tree.size())
-        assertTrue(tree.search(Int.MAX_VALUE))
-        assertTrue(tree.search(Int.MIN_VALUE))
+        assertTrue(tree.search(value = Int.MAX_VALUE))
+        assertTrue(tree.search(value = Int.MIN_VALUE))
     }
 
     @Test
@@ -371,8 +371,8 @@ class RedBlackTreeTest {
         val insertions = listOf(41, 19, 8, 39, 21, 97, 109, 82, 58, 72)
         val deletions = listOf(39, 8, 19, 41, 82)
 
-        insertions.forEach { tree.insert(it) }
-        deletions.forEach { tree.delete(it) }
+        insertions.forEach { tree.insert(value = it) }
+        deletions.forEach { tree.delete(value = it) }
 
         assertEquals(listOf(21, 58, 72, 97, 109), tree.toList())
         assertEquals(5, tree.size())
@@ -384,8 +384,8 @@ class RedBlackTreeTest {
         val insertions = listOf(53, 68, 77, 102, 27, 31, 119, 101, 94, 76, 83, 54, 95, 3, 1, 52, 26, 112, 104, 92)
         val deletions = listOf(68, 31, 101, 104, 95, 53, 102, 94, 119, 26)
 
-        insertions.forEach { tree.insert(it) }
-        deletions.forEach { tree.delete(it) }
+        insertions.forEach { tree.insert(value = it) }
+        deletions.forEach { tree.delete(value = it) }
 
         assertEquals(listOf(1, 3, 27, 52, 54, 76, 77, 83, 92, 112), tree.toList())
         assertEquals(10, tree.size())
@@ -397,8 +397,8 @@ class RedBlackTreeTest {
         val insertions = listOf(57, 109, 103, 116, 107, 8, 99, 87, 94, 118, 28, 33, 21, 55)
         val deletions = listOf(99, 107, 94, 21, 8, 118, 28, 87, 55, 109, 57)
 
-        insertions.forEach { tree.insert(it) }
-        deletions.forEach { tree.delete(it) }
+        insertions.forEach { tree.insert(value = it) }
+        deletions.forEach { tree.delete(value = it) }
 
         assertEquals(listOf(33, 103, 116), tree.toList())
         assertEquals(3, tree.size())

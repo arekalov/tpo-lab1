@@ -4,63 +4,89 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("Тесты Суперкомпьютера")
 class SupercomputerTest {
 
-    private lateinit var computer: Supercomputer
-
-    @BeforeEach
-    fun setup() {
-        computer = Supercomputer("Deep Thought")
-    }
+    private fun createSupercomputer(name: String = "Deep Thought"): Supercomputer =
+        Supercomputer(name)
 
     @Test
     @DisplayName("Создание суперкомпьютера")
     fun testCreateSupercomputer() {
+        val computer = createSupercomputer()
+
         assertEquals("Deep Thought", computer.name)
-        assertFalse(computer.isCurrentlyCalculating)
+        assertEquals(0.0, computer.progressPercentage)
         assertFalse(computer.isCalculationComplete)
+        assertFalse(computer.isCurrentlyCalculating)
     }
 
     @Test
-    @DisplayName("Запуск вычисления")
+    @DisplayName("startCalculation запускает вычисление")
     fun testStartCalculation() {
+        val computer = createSupercomputer()
+
         val result = computer.startCalculation()
 
-        assertTrue(result.contains("Deep Thought"))
+        assertTrue(result.contains("начинает глубокие размышления"))
         assertTrue(computer.isCurrentlyCalculating)
     }
 
     @Test
-    @DisplayName("Повторный запуск вычисления")
-    fun testRestartCalculation() {
+    @DisplayName("startCalculation нельзя запустить дважды")
+    fun testStartCalculationTwice() {
+        val computer = createSupercomputer()
         computer.startCalculation()
+
         val result = computer.startCalculation()
 
-        assertTrue(result.contains("уже идет"))
+        assertTrue(result.contains("Вычисление уже идет"))
     }
 
     @Test
-    @DisplayName("Прогресс вычисления")
-    fun testCalculationProgress() {
+    @DisplayName("tick увеличивает прогресс")
+    fun testTickIncreasesProgress() {
+        val computer = createSupercomputer()
         computer.startCalculation()
 
-        val initialProgress = computer.progressPercentage
-        computer.tick(1000)
-        val afterProgress = computer.progressPercentage
+        val progress1 = computer.tick(timeUnits = 1000)
+        val progress2 = computer.tick(timeUnits = 2000)
 
-        assertTrue(afterProgress > initialProgress)
+        assertEquals(1000, progress1)
+        assertEquals(3000, progress2)
     }
 
     @Test
-    @DisplayName("Завершение вычисления")
-    fun testCalculationComplete() {
+    @DisplayName("tick не работает без запуска вычисления")
+    fun testTickWithoutStart() {
+        val computer = createSupercomputer()
+
+        val progress = computer.tick(timeUnits = 1000)
+
+        assertEquals(0, progress)
+        assertEquals(0.0, computer.progressPercentage)
+    }
+
+    @Test
+    @DisplayName("progressPercentage вычисляется корректно")
+    fun testProgressPercentage() {
+        val computer = createSupercomputer()
         computer.startCalculation()
-        computer.tick(10_000_000) // Большой скачок времени
+
+        computer.tick(timeUnits = 750_000)
+
+        assertEquals(10.0, computer.progressPercentage, 0.01)
+    }
+
+    @Test
+    @DisplayName("tick завершает вычисление при достижении времени")
+    fun testTickCompletesCalculation() {
+        val computer = createSupercomputer()
+        computer.startCalculation()
+
+        computer.tick(timeUnits = 7_500_000)
 
         assertTrue(computer.isCalculationComplete)
         assertFalse(computer.isCurrentlyCalculating)
@@ -68,76 +94,152 @@ class SupercomputerTest {
     }
 
     @Test
-    @DisplayName("Получение ответа до завершения")
-    fun testGetAnswerBeforeComplete() {
+    @DisplayName("tick не превышает максимальное время")
+    fun testTickDoesNotExceedMaxTime() {
+        val computer = createSupercomputer()
         computer.startCalculation()
-        computer.tick(100)
+
+        computer.tick(timeUnits = 10_000_000)
+
+        assertTrue(computer.isCalculationComplete)
+        assertEquals(100.0, computer.progressPercentage)
+    }
+
+    @Test
+    @DisplayName("getAnswer возвращает null до завершения")
+    fun testGetAnswerBeforeComplete() {
+        val computer = createSupercomputer()
+        computer.startCalculation()
+
+        computer.tick(timeUnits = 1_000_000)
 
         assertNull(computer.getAnswer())
     }
 
     @Test
-    @DisplayName("Вопрос к суперкомпьютеру до запуска")
+    @DisplayName("getAnswer возвращает 42 после завершения")
+    fun testGetAnswerAfterComplete() {
+        val computer = createSupercomputer()
+        computer.startCalculation()
+
+        computer.tick(timeUnits = 7_500_000)
+
+        assertEquals(42, computer.getAnswer())
+    }
+
+    @Test
+    @DisplayName("reset сбрасывает состояние")
+    fun testReset() {
+        val computer = createSupercomputer()
+        computer.startCalculation()
+        computer.tick(timeUnits = 1_000_000)
+
+        computer.reset()
+
+        assertEquals(0.0, computer.progressPercentage)
+        assertFalse(computer.isCalculationComplete)
+        assertFalse(computer.isCurrentlyCalculating)
+        assertNull(computer.getAnswer())
+    }
+
+    @Test
+    @DisplayName("askQuestion до начала вычислений")
     fun testAskQuestionBeforeStart() {
-        val response = computer.askQuestion("What is the meaning of life?")
+        val computer = createSupercomputer()
 
-        assertTrue(response.contains("не начал"))
+        val response = computer.askQuestion(question = "Test?")
+
+        assertTrue(response.contains("еще не начал вычисления"))
     }
 
     @Test
-    @DisplayName("Вопрос к суперкомпьютеру во время вычисления")
+    @DisplayName("askQuestion во время вычислений")
     fun testAskQuestionDuringCalculation() {
+        val computer = createSupercomputer()
         computer.startCalculation()
-        computer.tick(100)
 
-        val response = computer.askQuestion("What is the meaning of life?")
+        computer.tick(timeUnits = 750_000)
+        val response = computer.askQuestion(question = "Test?")
 
-        assertTrue(response.contains("думаю"))
-        assertTrue(response.contains("Прогресс"))
+        assertTrue(response.contains("все еще думаю"))
+        assertTrue(response.contains("10%"))
     }
 
     @Test
-    @DisplayName("Вопрос к суперкомпьютеру после завершения")
+    @DisplayName("askQuestion после завершения вычислений")
     fun testAskQuestionAfterComplete() {
+        val computer = createSupercomputer()
         computer.startCalculation()
-        computer.tick(10_000_000)
+        computer.tick(timeUnits = 7_500_000)
 
-        val response = computer.askQuestion("What is the meaning of life?")
+        val response = computer.askQuestion(question = "В чём смысл жизни?")
 
+        assertTrue(response.contains("В чём смысл жизни?"))
         assertTrue(response.contains("42"))
     }
 
     @Test
-    @DisplayName("Сброс суперкомпьютера")
-    fun testResetSupercomputer() {
-        computer.startCalculation()
-        computer.tick(1000)
-        computer.reset()
+    @DisplayName("Полный цикл вычисления с проверкой прогресса")
+    fun testFullCalculationCycle() {
+        val computer = createSupercomputer()
 
-        assertFalse(computer.isCurrentlyCalculating)
+        computer.startCalculation()
+        assertTrue(computer.isCurrentlyCalculating)
+        assertEquals(0.0, computer.progressPercentage)
+
+        computer.tick(timeUnits = 1_875_000)
+        assertEquals(25.0, computer.progressPercentage, 0.01)
         assertFalse(computer.isCalculationComplete)
-        assertNull(computer.getAnswer())
-        assertEquals(0.0, computer.progressPercentage, 0.01)
+
+        computer.tick(timeUnits = 1_875_000)
+        assertEquals(50.0, computer.progressPercentage, 0.01)
+        assertFalse(computer.isCalculationComplete)
+
+        computer.tick(timeUnits = 1_875_000)
+        assertEquals(75.0, computer.progressPercentage, 0.01)
+        assertFalse(computer.isCalculationComplete)
+
+        computer.tick(timeUnits = 1_875_000)
+        assertEquals(100.0, computer.progressPercentage)
+        assertTrue(computer.isCalculationComplete)
+        assertFalse(computer.isCurrentlyCalculating)
+        assertEquals(42, computer.getAnswer())
     }
 
     @Test
-    @DisplayName("Прогресс в процентах")
-    fun testProgressPercentage() {
+    @DisplayName("reset позволяет начать вычисление заново")
+    fun testResetAndRestart() {
+        val computer = createSupercomputer()
+        computer.startCalculation()
+        computer.tick(timeUnits = 1_000_000)
+
+        computer.reset()
+        val result = computer.startCalculation()
+
+        assertTrue(result.contains("начинает глубокие размышления"))
+        assertTrue(computer.isCurrentlyCalculating)
+    }
+
+    @Test
+    @DisplayName("Множественные tick с малыми значениями")
+    fun testMultipleSmallTicks() {
+        val computer = createSupercomputer()
         computer.startCalculation()
 
-        assertEquals(0.0, computer.progressPercentage, 0.01)
+        repeat(100) { computer.tick(timeUnits = 75_000) }
 
-        computer.tick(3_750_000) // 50%
-        assertTrue(computer.progressPercentage > 49.0)
-        assertTrue(computer.progressPercentage < 51.0)
+        assertTrue(computer.isCalculationComplete)
+        assertEquals(42, computer.getAnswer())
     }
 
     @Test
-    @DisplayName("Tick без активного вычисления")
-    fun testTickWithoutCalculation() {
-        val progress = computer.tick(100)
+    @DisplayName("tick() без параметра использует значение по умолчанию")
+    fun testTickWithDefaultParameter() {
+        val computer = createSupercomputer()
+        computer.startCalculation()
 
-        assertEquals(0, progress)
-        assertFalse(computer.isCurrentlyCalculating)
+        val progress = computer.tick()
+
+        assertEquals(1, progress)
     }
 }

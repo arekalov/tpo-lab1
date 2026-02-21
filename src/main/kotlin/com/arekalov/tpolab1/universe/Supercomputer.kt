@@ -9,7 +9,6 @@ class Supercomputer(
     private var isCalculating: Boolean = false
     private var calculationProgress: Int = 0
     private val calculationTime: Int = 7_500_000 // 7.5 миллионов лет в каких-то условных единицах
-    private var answer: Int? = null
 
     val progressPercentage: Double
         get() = (calculationProgress.toDouble() / calculationTime) * 100
@@ -43,7 +42,6 @@ class Supercomputer(
         calculationProgress += timeUnits
 
         if (calculationProgress >= calculationTime) {
-            answer = 42
             isCalculating = false
             calculationProgress = calculationTime
         }
@@ -55,10 +53,7 @@ class Supercomputer(
      * Получить ответ
      */
     fun getAnswer(): Int? {
-        if (answer == null && calculationProgress >= calculationTime) {
-            answer = 42
-        }
-        return answer
+        return if (isCalculationComplete) 42 else null
     }
 
     /**
@@ -67,7 +62,6 @@ class Supercomputer(
     fun reset() {
         isCalculating = false
         calculationProgress = 0
-        answer = null
     }
 
     /**
