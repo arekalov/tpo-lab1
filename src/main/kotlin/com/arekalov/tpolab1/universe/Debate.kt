@@ -6,9 +6,7 @@ package com.arekalov.tpolab1.universe
 class Debate(
     val topic: String = "Смысл жизни, вселенной и всего такого",
 ) {
-    private val _participants: MutableList<Habitant> = mutableListOf()
-    val participants: List<Habitant>
-        get() = _participants
+    val participants: MutableList<Habitant> = mutableListOf()
 
     var isActive: Boolean = false
         private set
@@ -16,18 +14,24 @@ class Debate(
     var roundsCompleted: Int = 0
         private set
 
-    var participantCount: Int = 0
-        private set
+    val participantCount: Int
+        get() = participants.size
+
+    val needsDrasticMeasures: Boolean
+        get() = isActive && participants.any { it.isTiredOfDebates }
+
+    val favoriteActivitiesStats: Map<TypeOfActivity, Int>
+        get() = participants.groupBy { it.favoriteActivity }
+            .mapValues { it.value.size }
 
     /**
      * Добавить участника дискуссии
      */
     fun addParticipant(habitant: Habitant): String {
-        if (habitant in _participants) {
+        if (habitant in participants) {
             return "${habitant.name} уже участвует в дискуссии"
         }
-        _participants.add(habitant)
-        participantCount = _participants.size
+        participants.add(habitant)
         return "${habitant.name} присоединился к дискуссии о теме: $topic"
     }
 
@@ -35,7 +39,7 @@ class Debate(
      * Начать дискуссию
      */
     fun start(): String {
-        if (_participants.isEmpty()) {
+        if (participants.isEmpty()) {
             return "Нет участников для дискуссии"
         }
         if (isActive) {
@@ -57,7 +61,7 @@ class Debate(
         roundsCompleted++
 
         // Каждый раунд повышает уровень разочарования и знаний
-        _participants.forEach {
+        participants.forEach {
             it.frustrationLevel += 5
             it.knowledgeLevel += 1
         }
@@ -74,8 +78,8 @@ class Debate(
         }
 
         isActive = false
-        val averageFrustration = if (_participants.isNotEmpty()) {
-            _participants.map { it.frustrationLevel }.average()
+        val averageFrustration = if (participants.isNotEmpty()) {
+            participants.map { it.frustrationLevel }.average()
         } else {
             0.0
         }
@@ -83,17 +87,4 @@ class Debate(
         return "Дискуссия завершена после $roundsCompleted раундов. " +
             "Средняя степень разочарования: ${"%.2f".format(averageFrustration)}"
     }
-
-    /**
-     * Проверить, нужно ли принимать кардинальные меры
-     */
-    fun needsDrasticMeasures(): Boolean =
-        isActive && _participants.any { it.isTiredOfDebates() }
-
-    /**
-     * Получить статистику любимых занятий участников
-     */
-    fun getFavoriteActivitiesStats(): Map<TypeOfActivity, Int> =
-        _participants.groupBy { it.favoriteActivity }
-            .mapValues { it.value.size }
 }

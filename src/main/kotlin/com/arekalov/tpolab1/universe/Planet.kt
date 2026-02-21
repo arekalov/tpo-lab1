@@ -11,11 +11,11 @@ data class Planet(
     val inhabitantCount: Int
         get() = inhabitants.size
 
-    var inhabitedRaces: List<Race> = emptyList()
-        private set
+    val inhabitedRaces: List<Race>
+        get() = inhabitants.map { it.race }.distinct()
 
     val hasFrustratedInhabitants: Boolean
-        get() = inhabitants.any { it.frustrationLevel > 0.5 }
+        get() = inhabitants.any { it.isTiredOfDebates }
 
     val averageFrustrationLevel: Double
         get() = if (inhabitants.isEmpty()) {
@@ -29,14 +29,6 @@ data class Planet(
      */
     fun addInhabitant(habitant: Habitant) {
         inhabitants.add(habitant)
-        updateStats()
-    }
-
-    /**
-     * Обновить статистику планеты
-     */
-    private fun updateStats() {
-        inhabitedRaces = inhabitants.map { it.race }.distinct()
     }
 
     /**
@@ -53,17 +45,33 @@ data class Planet(
             return "Недостаточно участников для турнира"
         }
 
+        // Подсчет побед для каждого участника
+        val wins = mutableMapOf<Habitant, Int>()
+        inhabitants.forEach { wins[it] = 0 }
+
         var events = 0
         for (i in inhabitants.indices) {
             for (j in inhabitants.indices) {
                 if (i != j) {
                     inhabitants[i].playBrockianUltraCricket(inhabitants[j])
+                    wins[inhabitants[i]] = (wins[inhabitants[i]] ?: 0) + 1
                     events++
                 }
             }
         }
 
-        updateStats()
-        return "Турнир завершен! События: $events"
+        // Определяем победителя
+        val winner = wins.maxByOrNull { it.value }
+
+        return buildString {
+            appendLine("Турнир завершен! События: $events")
+            if (winner != null) {
+                appendLine("🏆 Победитель: ${winner.key.name} с ${winner.value} победами!")
+                appendLine("\nТаблица результатов:")
+                wins.entries.sortedByDescending { it.value }.forEach { (habitant, count) ->
+                    appendLine("  ${habitant.name}: $count побед")
+                }
+            }
+        }
     }
 }

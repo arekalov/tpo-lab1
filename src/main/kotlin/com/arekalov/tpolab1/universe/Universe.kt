@@ -6,68 +6,55 @@ package com.arekalov.tpolab1.universe
 class Universe(
     val name: String,
     var age: Long = 0,
-    private val planets: MutableList<Planet> = mutableListOf(),
+    private val _planets: MutableList<Planet> = mutableListOf(),
 ) {
-    private var supercomputer: Supercomputer? = null
+    var supercomputer: Supercomputer? = null
+        private set
+
     private val events: MutableList<String> = mutableListOf()
 
-    var totalInhabitants: Int = 0
-        private set
+    val totalInhabitants: Int
+        get() = _planets.sumOf { it.inhabitantCount }
 
-    var planetsCount: Int = 0
-        private set
+    val planetsCount: Int
+        get() = _planets.size
 
-    var isTiredOfDebates: Boolean = false
-        private set
+    val isTiredOfDebates: Boolean
+        get() {
+            val allInhabitants = _planets.flatMap { it.inhabitants }
+            if (allInhabitants.isEmpty()) return false
+            val frustratedCount = allInhabitants.count { it.isTiredOfDebates }
+            return frustratedCount.toDouble() / allInhabitants.size > 0.5
+        }
+
+    val history: List<String>
+        get() = events.toList()
+
+    val planets: List<Planet>
+        get() = _planets.toList()
+
+    val allInhabitants: List<Habitant>
+        get() = _planets.flatMap { it.inhabitants }
 
     /**
      * Добавить планету во вселенную
      */
     fun addPlanet(planet: Planet) {
-        planets.add(planet)
-        updateStats()
+        _planets.add(planet)
         logEvent("Планета ${planet.name} добавлена во вселенную")
     }
-
-    /**
-     * Обновить статистику вселенной
-     */
-    fun updateStats() {
-        planetsCount = planets.size
-        totalInhabitants = planets.sumOf { it.inhabitantCount }
-
-        val allInhabitants = planets.flatMap { it.inhabitants }
-        if (allInhabitants.isNotEmpty()) {
-            val frustratedCount = allInhabitants.count { it.isTiredOfDebates() }
-            isTiredOfDebates = frustratedCount.toDouble() / allInhabitants.size > 0.5
-        }
-
-        // Обновляем статистику планет
-        planets.forEach { it.updateStats() }
-    }
-
-    /**
-     * Получить список планет
-     */
-    fun getPlanets(): List<Planet> = planets.toList()
 
     /**
      * Получить планету по имени
      */
     fun getPlanetByName(name: String): Planet? =
-        planets.find { it.name == name }
-
-    /**
-     * Получить всех обитателей вселенной
-     */
-    fun getAllInhabitants(): List<Habitant> =
-        planets.flatMap { it.inhabitants }
+        _planets.find { it.name == name }
 
     /**
      * Получить количество обитателей определенной расы во всей вселенной
      */
     fun getInhabitantCountByRace(race: Race): Int =
-        getAllInhabitants().count { it.race == race }
+        allInhabitants.count { it.race == race }
 
     /**
      * Создать суперкомпьютер для решения вопроса о смысле жизни
@@ -77,7 +64,7 @@ class Universe(
             return "Суперкомпьютер уже существует!"
         }
 
-        val capableBeings = getAllInhabitants().filter { it.canBuildSupercomputer() }
+        val capableBeings = allInhabitants.filter { it.canBuildSupercomputer }
         if (capableBeings.isEmpty()) {
             return "Нет существ, способных построить суперкомпьютер"
         }
@@ -87,11 +74,6 @@ class Universe(
         logEvent("Построен суперкомпьютер '$computerName'")
         return "Суперкомпьютер '$computerName' успешно построен!"
     }
-
-    /**
-     * Получить суперкомпьютер
-     */
-    fun getSupercomputer(): Supercomputer? = supercomputer
 
     /**
      * Запустить поиск ответа на главный вопрос
@@ -111,8 +93,7 @@ class Universe(
      * Провести глобальный турнир по брокианскому ультра-крикету
      */
     fun conductUniversalUltraCricketTournament(): String {
-        planets.forEach { it.conductUltraCricketTournament() }
-        updateStats()
+        _planets.forEach { it.conductUltraCricketTournament() }
         logEvent("Проведен вселенский турнир по брокианскому ультра-крикету")
         return "Турнир завершен на $planetsCount планетах"
     }
@@ -131,7 +112,6 @@ class Universe(
      * Получить состояние вселенной
      */
     fun getStatus(): String {
-        val allInhabitants = getAllInhabitants()
         val avgFrustration = if (allInhabitants.isNotEmpty()) {
             allInhabitants.map { it.frustrationLevel }.average()
         } else {
@@ -145,7 +125,6 @@ class Universe(
             appendLine("Обитателей: $totalInhabitants")
             appendLine("Средняя степень разочарования: ${"%.2f".format(avgFrustration)}")
 
-            // Статистика любимых занятий
             val favoriteActivities = allInhabitants.groupBy { it.favoriteActivity }
                 .mapValues { it.value.size }
                 .toList()
@@ -160,7 +139,7 @@ class Universe(
 
             appendLine("\nСуперкомпьютер: ${if (supercomputer != null) "Есть" else "Нет"}")
             if (supercomputer != null) {
-                appendLine("Прогресс вычислений: ${"%.2f".format(supercomputer!!.getProgressPercentage())}%")
+                appendLine("Прогресс вычислений: ${"%.2f".format(supercomputer!!.progressPercentage)}%")
                 appendLine("Ответ: ${supercomputer!!.getAnswer() ?: "Еще не готов"}")
             }
         }
@@ -172,9 +151,4 @@ class Universe(
     private fun logEvent(event: String) {
         events.add("[$age] $event")
     }
-
-    /**
-     * Получить историю событий
-     */
-    fun getHistory(): List<String> = events.toList()
 }

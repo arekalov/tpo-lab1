@@ -34,7 +34,7 @@ class UniverseTest {
     fun testCreateUniverse() {
         assertEquals("Multidimensional Universe", universe.name)
         assertEquals(0, universe.age)
-        assertTrue(universe.getPlanets().isEmpty())
+        assertTrue(universe.planets.isEmpty())
     }
 
     @Test
@@ -42,8 +42,8 @@ class UniverseTest {
     fun testAddPlanet() {
         universe.addPlanet(planet)
 
-        assertEquals(1, universe.getPlanets().size)
-        assertEquals("Magrathea", universe.getPlanets()[0].name)
+        assertEquals(1, universe.planets.size)
+        assertEquals("Magrathea", universe.planets[0].name)
     }
 
     @Test
@@ -61,7 +61,7 @@ class UniverseTest {
         val initialKnowledge = being.knowledgeLevel
         being.contemplate()
 
-        assertEquals(TypeOfActivity.BUILDING, being.favoriteActivity)
+        assertEquals(TypeOfActivity.RESTING, being.favoriteActivity) // не меняется
         assertTrue(being.knowledgeLevel > initialKnowledge)
     }
 
@@ -73,7 +73,7 @@ class UniverseTest {
 
         val result = being.playBrockianUltraCricket(target)
 
-        assertEquals(TypeOfActivity.BUILDING, being.favoriteActivity) // не меняется
+        assertEquals(TypeOfActivity.RESTING, being.favoriteActivity) // не меняется
         assertTrue(target.frustrationLevel > targetInitialFrustration)
         assertTrue(result.contains("неожиданно ударяет"))
     }
@@ -83,16 +83,16 @@ class UniverseTest {
     fun testHabitantGetsTired() {
         being.frustrationLevel = 60
 
-        assertTrue(being.isTiredOfDebates())
+        assertTrue(being.isTiredOfDebates)
     }
 
     @Test
     @DisplayName("Проверка способности построить суперкомпьютер")
     fun testCanBuildSupercomputer() {
-        assertTrue(being.canBuildSupercomputer())
+        assertTrue(being.canBuildSupercomputer)
 
         val human = Habitant("Ford", Race.HUMAN, knowledgeLevel = 20)
-        assertFalse(human.canBuildSupercomputer())
+        assertFalse(human.canBuildSupercomputer)
     }
 
     @Test
@@ -152,8 +152,8 @@ class UniverseTest {
         val result = universe.buildSupercomputer("Deep Thought")
 
         assertTrue(result.contains("успешно построен"))
-        assertNotNull(universe.getSupercomputer())
-        assertEquals("Deep Thought", universe.getSupercomputer()?.name)
+        assertNotNull(universe.supercomputer)
+        assertEquals("Deep Thought", universe.supercomputer?.name)
     }
 
     @Test
@@ -165,7 +165,7 @@ class UniverseTest {
         val result = universe.buildSupercomputer("Deep Thought")
 
         assertTrue(result.contains("Нет существ"))
-        assertNull(universe.getSupercomputer())
+        assertNull(universe.supercomputer)
     }
 
     @Test
@@ -178,7 +178,7 @@ class UniverseTest {
         val result = universe.startSearchingForAnswer()
 
         assertTrue(result.contains("размышления"))
-        assertTrue(universe.getSupercomputer()!!.isCurrentlyCalculating())
+        assertTrue(universe.supercomputer!!.isCurrentlyCalculating)
     }
 
     @Test
@@ -193,7 +193,6 @@ class UniverseTest {
             planet.addInhabitant(hab)
         }
 
-        universe.updateStats()
         assertTrue(universe.isTiredOfDebates)
     }
 

@@ -11,6 +11,15 @@ class Supercomputer(
     private val calculationTime: Int = 7_500_000 // 7.5 миллионов лет в каких-то условных единицах
     private var answer: Int? = null
 
+    val progressPercentage: Double
+        get() = (calculationProgress.toDouble() / calculationTime) * 100
+
+    val isCalculationComplete: Boolean
+        get() = calculationProgress >= calculationTime
+
+    val isCurrentlyCalculating: Boolean
+        get() = isCalculating
+
     /**
      * Запустить вычисление
      */
@@ -53,22 +62,6 @@ class Supercomputer(
     }
 
     /**
-     * Получить прогресс вычисления в процентах
-     */
-    fun getProgressPercentage(): Double =
-        (calculationProgress.toDouble() / calculationTime) * 100
-
-    /**
-     * Проверить, завершено ли вычисление
-     */
-    fun isCalculationComplete(): Boolean = calculationProgress >= calculationTime
-
-    /**
-     * Проверить, идет ли вычисление
-     */
-    fun isCurrentlyCalculating(): Boolean = isCalculating
-
-    /**
      * Сбросить суперкомпьютер
      */
     fun reset() {
@@ -82,10 +75,10 @@ class Supercomputer(
      */
     fun askQuestion(question: String): String {
         return when {
-            !isCalculationComplete() && calculationProgress == 0 ->
+            !isCalculationComplete && calculationProgress == 0 ->
                 "Я еще не начал вычисления. Запустите startCalculation() сначала."
-            !isCalculationComplete() ->
-                "Я все еще думаю... Прогресс: ${getProgressPercentage().toInt()}%"
+            !isCalculationComplete ->
+                "Я все еще думаю... Прогресс: ${progressPercentage.toInt()}%"
             else -> {
                 val ans = getAnswer()
                 "Ответ на вопрос '$question' равен $ans"

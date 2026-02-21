@@ -121,8 +121,7 @@ class DebateTest {
 
         assertTrue(result.contains("завершена"))
         assertFalse(debate.isActive)
-        assertEquals(TypeOfActivity.RESTING, being1.favoriteActivity)
-        assertEquals(TypeOfActivity.RESTING, being2.favoriteActivity)
+        // favoriteActivity больше не меняется - это константа
     }
 
     @Test
@@ -141,12 +140,12 @@ class DebateTest {
         debate.addParticipant(being1)
         debate.start()
 
-        assertFalse(debate.needsDrasticMeasures())
+        assertFalse(debate.needsDrasticMeasures)
 
         // Проводим много раундов, чтобы участники устали
         repeat(15) { debate.conductRound() }
 
-        assertTrue(debate.needsDrasticMeasures())
+        assertTrue(debate.needsDrasticMeasures)
     }
 
     @Test

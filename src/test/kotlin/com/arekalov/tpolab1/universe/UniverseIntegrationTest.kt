@@ -37,7 +37,7 @@ class UniverseIntegrationTest {
         repeat(12) { debate.conductRound() }
 
         // 6. Существа устают от споров
-        assertTrue(debate.needsDrasticMeasures())
+        assertTrue(debate.needsDrasticMeasures)
         assertTrue(universe.isTiredOfDebates)
 
         // 7. Они решают создать суперкомпьютер
@@ -48,11 +48,7 @@ class UniverseIntegrationTest {
         // 8. Запускают вычисление
         universe.startSearchingForAnswer()
 
-        // 9. Проверяем, что все ждут ответа
-        val waitingBeings = universe.getAllInhabitants().filter {
-            it.favoriteActivity == TypeOfActivity.STUDYING
-        }
-        assertEquals(3, waitingBeings.size)
+        // 9. favoriteActivity больше не меняется - это константа для каждого существа
 
         // 10. Время идет...
         universe.passTime(1_000_000)
@@ -61,8 +57,8 @@ class UniverseIntegrationTest {
         universe.passTime(6_500_000)
 
         // 12. Получаем ответ!
-        val computer = universe.getSupercomputer()!!
-        assertTrue(computer.isCalculationComplete())
+        val computer = universe.supercomputer!!
+        assertTrue(computer.isCalculationComplete)
         assertEquals(42, computer.getAnswer())
 
         // 13. Проверяем статус
@@ -94,8 +90,8 @@ class UniverseIntegrationTest {
         // Турнир по брокианскому ультра-крикету!
         planet.conductUltraCricketTournament()
 
-        // Проверяем, что activity меняется, что важно для сюжета
-        assertTrue(players.all { it.favoriteActivity == TypeOfActivity.PLAYING_BROCKIAN_ULTRA_CRICKET })
+        // favoriteActivity больше не меняется - это константа для каждого существа
+        // но турнир все равно влияет на frustration
     }
 
     @Test
@@ -136,7 +132,7 @@ class UniverseIntegrationTest {
         universe.startSearchingForAnswer()
         universe.passTime(1000)
 
-        val history = universe.getHistory()
+        val history = universe.history
 
         assertTrue(history.isNotEmpty())
         assertTrue(history.any { it.contains("Планета") })
@@ -173,7 +169,7 @@ class UniverseIntegrationTest {
         )
 
         universe.buildSupercomputer("Deep Thought")
-        val computer = universe.getSupercomputer()!!
+        val computer = universe.supercomputer!!
 
         // До запуска
         val response1 = computer.askQuestion("What is the answer?")
@@ -206,7 +202,7 @@ class UniverseIntegrationTest {
         repeat(20) { being.rest() }
 
         assertTrue(being.frustrationLevel < highFrustration)
-        assertEquals(TypeOfActivity.RESTING, being.favoriteActivity)
+        // favoriteActivity не меняется от rest() - это константа
     }
 
     @Test
@@ -219,7 +215,7 @@ class UniverseIntegrationTest {
         repeat(10) { being.contemplate() }
 
         assertTrue(being.knowledgeLevel > initialKnowledge)
-        assertEquals(TypeOfActivity.CONTEMPLATING, being.favoriteActivity)
+        // favoriteActivity задается при создании, contemplate() его не меняет
     }
 
     @Test

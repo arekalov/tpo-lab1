@@ -10,6 +10,12 @@ data class Habitant(
     var frustrationLevel: Int = 0,
     var knowledgeLevel: Int = 0,
 ) {
+    val isTiredOfDebates: Boolean
+        get() = frustrationLevel > 50
+
+    val canBuildSupercomputer: Boolean
+        get() = race == Race.HYPERINTELLIGENT_PANDIMENSIONAL_BEINGS && knowledgeLevel >= 10
+
     /**
      * Играть в брокианский ультра-крикет
      */
@@ -38,16 +44,6 @@ data class Habitant(
      */
     fun contemplate() {
         knowledgeLevel += 1
+        frustrationLevel += 1
     }
-
-    /**
-     * Устал ли обитатель от споров?
-     */
-    fun isTiredOfDebates(): Boolean = frustrationLevel > 50
-
-    /**
-     * Может ли участвовать в создании суперкомпьютера?
-     */
-    fun canBuildSupercomputer(): Boolean =
-        race == Race.HYPERINTELLIGENT_PANDIMENSIONAL_BEINGS && knowledgeLevel >= 10
 }

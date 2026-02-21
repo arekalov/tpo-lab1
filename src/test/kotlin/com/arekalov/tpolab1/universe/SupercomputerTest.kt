@@ -22,8 +22,8 @@ class SupercomputerTest {
     @DisplayName("Создание суперкомпьютера")
     fun testCreateSupercomputer() {
         assertEquals("Deep Thought", computer.name)
-        assertFalse(computer.isCurrentlyCalculating())
-        assertFalse(computer.isCalculationComplete())
+        assertFalse(computer.isCurrentlyCalculating)
+        assertFalse(computer.isCalculationComplete)
     }
 
     @Test
@@ -32,7 +32,7 @@ class SupercomputerTest {
         val result = computer.startCalculation()
 
         assertTrue(result.contains("Deep Thought"))
-        assertTrue(computer.isCurrentlyCalculating())
+        assertTrue(computer.isCurrentlyCalculating)
     }
 
     @Test
@@ -49,9 +49,9 @@ class SupercomputerTest {
     fun testCalculationProgress() {
         computer.startCalculation()
 
-        val initialProgress = computer.getProgressPercentage()
+        val initialProgress = computer.progressPercentage
         computer.tick(1000)
-        val afterProgress = computer.getProgressPercentage()
+        val afterProgress = computer.progressPercentage
 
         assertTrue(afterProgress > initialProgress)
     }
@@ -62,8 +62,8 @@ class SupercomputerTest {
         computer.startCalculation()
         computer.tick(10_000_000) // Большой скачок времени
 
-        assertTrue(computer.isCalculationComplete())
-        assertFalse(computer.isCurrentlyCalculating())
+        assertTrue(computer.isCalculationComplete)
+        assertFalse(computer.isCurrentlyCalculating)
         assertEquals(42, computer.getAnswer())
     }
 
@@ -114,10 +114,10 @@ class SupercomputerTest {
         computer.tick(1000)
         computer.reset()
 
-        assertFalse(computer.isCurrentlyCalculating())
-        assertFalse(computer.isCalculationComplete())
+        assertFalse(computer.isCurrentlyCalculating)
+        assertFalse(computer.isCalculationComplete)
         assertNull(computer.getAnswer())
-        assertEquals(0.0, computer.getProgressPercentage(), 0.01)
+        assertEquals(0.0, computer.progressPercentage, 0.01)
     }
 
     @Test
@@ -125,11 +125,11 @@ class SupercomputerTest {
     fun testProgressPercentage() {
         computer.startCalculation()
 
-        assertEquals(0.0, computer.getProgressPercentage(), 0.01)
+        assertEquals(0.0, computer.progressPercentage, 0.01)
 
         computer.tick(3_750_000) // 50%
-        assertTrue(computer.getProgressPercentage() > 49.0)
-        assertTrue(computer.getProgressPercentage() < 51.0)
+        assertTrue(computer.progressPercentage > 49.0)
+        assertTrue(computer.progressPercentage < 51.0)
     }
 
     @Test
@@ -138,6 +138,6 @@ class SupercomputerTest {
         val progress = computer.tick(100)
 
         assertEquals(0, progress)
-        assertFalse(computer.isCurrentlyCalculating())
+        assertFalse(computer.isCurrentlyCalculating)
     }
 }
