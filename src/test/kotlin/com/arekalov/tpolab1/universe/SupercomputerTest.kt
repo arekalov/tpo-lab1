@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class SupercomputerTest {
 
     private fun createSupercomputer(name: String = "Deep Thought"): Supercomputer =
-        Supercomputer(name)
+        Supercomputer(name = name)
 
     @Test
     @DisplayName("Создание суперкомпьютера")

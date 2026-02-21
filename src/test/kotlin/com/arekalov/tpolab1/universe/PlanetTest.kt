@@ -11,7 +11,7 @@ class PlanetTest {
     private fun createPlanet(
         name: String = "Test Planet",
         mass: Double = 1.0e24,
-    ): Planet = Planet(name, mass)
+    ): Planet = Planet(name = name, mass = mass)
 
     private fun createHabitant(
         name: String = "Habitant",
@@ -19,7 +19,13 @@ class PlanetTest {
         favoriteActivity: TypeOfActivity = TypeOfActivity.CONTEMPLATING,
         frustrationLevel: Int = 0,
         knowledgeLevel: Int = 0,
-    ): Habitant = Habitant(name, race, favoriteActivity, frustrationLevel, knowledgeLevel)
+    ): Habitant = Habitant(
+        name = name,
+        race = race,
+        favoriteActivity = favoriteActivity,
+        frustrationLevel = frustrationLevel,
+        knowledgeLevel = knowledgeLevel,
+    )
 
     @Test
     @DisplayName("Создание планеты с параметрами")

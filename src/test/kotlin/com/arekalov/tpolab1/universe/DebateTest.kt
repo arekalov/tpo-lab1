@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class DebateTest {
 
     private fun createDebate(topic: String = "Смысл жизни, вселенной и всего такого"): Debate =
-        Debate(topic)
+        Debate(topic = topic)
 
     private fun createHabitant(
         name: String = "Philosopher",

@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 class UniverseTest {
 
     private fun createUniverse(name: String = "Multidimensional Universe"): Universe =
-        Universe(name)
+        Universe(name = name)
 
     private fun createPlanet(
         name: String = "Magrathea",
         mass: Double = 5.972e24,
-    ): Planet = Planet(name, mass)
+    ): Planet = Planet(name = name, mass = mass)
 
     private fun createHabitant(
         name: String = "Slartibartfast",
@@ -25,7 +25,13 @@ class UniverseTest {
         favoriteActivity: TypeOfActivity = TypeOfActivity.RESTING,
         frustrationLevel: Int = 0,
         knowledgeLevel: Int = 15,
-    ): Habitant = Habitant(name, race, favoriteActivity, frustrationLevel, knowledgeLevel)
+    ): Habitant = Habitant(
+        name = name,
+        race = race,
+        favoriteActivity = favoriteActivity,
+        frustrationLevel = frustrationLevel,
+        knowledgeLevel = knowledgeLevel,
+    )
 
     @Test
     @DisplayName("Создание новой вселенной")
